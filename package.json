@@ -1,0 +1,27 @@
+{
+  "name": "caster-backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "dependencies": {
+    "cors": "^2.8.6",
+    "dotenv": "^17.3.1",
+    "express": "^5.2.1",
+    "express-rate-limit": "^8.3.2",
+    "node-fetch": "^3.3.2",
+    "nodemailer": "^8.0.4",
+    "resend": "^6.10.0",
+    "sanitize-html": "^2.17.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14"
+  }
+}
