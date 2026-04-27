@@ -7,9 +7,13 @@ import { aiexpertContactRoute } from "./aiexperts/aiexperts.routes.js";
 import { castorGlobalsContactRoute } from "./castorglobals/castorglobal.routes.js";
 import { bharatXVenturesContactRoute } from "./bharatxventures/bharatxventures.routes.js";
 import { bharatXInfratechContactRoute } from "./bharatxinfratech/bharatxinfratech.routes.js";
-
+import connectDB from "./db.js";
+import { blogRoutes } from "./Blog/route.js";
 
 const app = express();
+
+
+await connectDB();
 
 // Allow all origins
 app.use(cors({
@@ -22,7 +26,7 @@ app.use("/api/castorglobals/contact", castorGlobalsContactRoute);
 app.use("/api/aiexperts/contact", aiexpertContactRoute);
 app.use("/api/bharatxventures/contact", bharatXVenturesContactRoute);
 app.use("/api/bharatxinfratech/contact", bharatXInfratechContactRoute);
-
+app.use("/api/blog", blogRoutes);
 
 const res = await fetch("https://api.ipify.org?format=json");
 const data = await res.json();
