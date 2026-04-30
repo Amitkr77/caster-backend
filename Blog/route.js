@@ -14,8 +14,6 @@ const router = express.Router();
 router.get("/", async (req, res) => {
   try {
     const db = await connectDB();
-    console.log("DB NAME:", db.databaseName);
-
     const { organization, page = 1, limit = 10 } = req.query;
 
     // Build filter dynamically
@@ -192,6 +190,47 @@ router.get("/handle/:url_handle", async (req, res) => {
     res.status(500).json({
       success: false,
       message: "Failed to fetch blog",
+      error: err.message,
+    });
+  }
+});
+
+router.get("/featured", async (req, res) => {
+  try {
+    const db = await connectDB();
+    const collection = db.collection("blogs");
+
+    const { organization, limit = 5 } = req.query;
+
+    // Build dynamic filter
+    const filter = {
+      is_featured: true,
+    };
+
+    if (organization) {
+      filter.organization = organization;
+    }
+
+    const blogs = await collection
+      .find(filter)
+      .sort({ createdAt: -1 })
+      .limit(Number(limit))
+      .toArray();
+    console.log(blogs);
+
+
+    res.status(200).json({
+      success: true,
+      count: blogs.length,
+      data: blogs,
+    });
+
+  } catch (err) {
+    console.error("FEATURED BLOGS ERROR:", err);
+
+    res.status(500).json({
+      success: false,
+      message: "Failed to fetch featured blogs",
       error: err.message,
     });
   }
