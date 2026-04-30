@@ -162,4 +162,39 @@ router.put("/:id", upload.single("image"), async (req, res) => {
   }
 });
 
+/**
+ * GET /api/blogs/:url_handle
+ */
+router.get("/handle/:url_handle", async (req, res) => {
+  try {
+    const db = await connectDB();
+    const collection = db.collection("blogs");
+
+    const { url_handle } = req.params;
+
+    const blog = await collection.findOne({ url_handle });
+
+    if (!blog) {
+      return res.status(404).json({
+        success: false,
+        message: "Blog not found",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      data: blog,
+    });
+
+  } catch (err) {
+    console.error("GET BLOG BY HANDLE ERROR:", err);
+
+    res.status(500).json({
+      success: false,
+      message: "Failed to fetch blog",
+      error: err.message,
+    });
+  }
+});
+
 export const blogRoutes = router
