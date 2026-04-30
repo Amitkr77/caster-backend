@@ -32,9 +32,7 @@ router.get("/", async (req, res) => {
         success: false,
         message: "Blog collection not found in database",
       });
-    } else {
-      console.log("Blog collection found in database");
-    }
+    } 
 
     const [blogs, total] = await Promise.all([
       collection
@@ -216,7 +214,6 @@ router.get("/featured", async (req, res) => {
       .sort({ createdAt: -1 })
       .limit(Number(limit))
       .toArray();
-    console.log(blogs);
 
 
     res.status(200).json({
