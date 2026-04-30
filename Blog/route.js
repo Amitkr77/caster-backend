@@ -32,7 +32,7 @@ router.get("/", async (req, res) => {
         success: false,
         message: "Blog collection not found in database",
       });
-    } 
+    }
 
     const [blogs, total] = await Promise.all([
       collection
@@ -69,14 +69,31 @@ router.post("/", upload.single("image"), async (req, res) => {
     const db = await connectDB();
     const collection = db.collection("blogs");
 
-    const { title, content, organization } = req.body;
+    const { title, content, organization, isFeatured, tags } = req.body;
 
+    // Automatically generate the excerpt (first 300 characters of content)
+    const excerpt = content.length > 300 ? content.substring(0, 300) + "..." : content;
+
+    // Generate SEO metadata based on the title (for example)
+    const seo = {
+      meta_description: content.slice(0, 160), // first 160 chars for meta description
+      page_title: title,
+    };
+
+    // Create the new blog object with the auto-generated excerpt
     const newBlog = {
       title,
       content,
       organization,
-      image: req.file ? req.file.path : null,
+      isFeatured: isFeatured === "true",  // Assuming 'true'/'false' as string input
+      tags: JSON.parse(tags), // Assuming tags are sent as a JSON string
+      excerpt,
+      seo,
       createdAt: new Date(),
+      updatedAt: new Date(),
+      image: req.file ? req.file.path : null,
+      // You can also calculate the word count here if needed:
+      word_count: content.split(' ').length,
     };
 
     const result = await collection.insertOne(newBlog);
